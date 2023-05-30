@@ -55,7 +55,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		if strings.Contains(resposta, `"Authorized"`) {
 			t, err := template.ParseFiles("html/saldo.html")
 			if err != nil {
-				fmt.Println("Error parsing template de saldo.html:", err)
+				fmt.Println("Error parsing template de :", err)
 				http.Error(w, "Internal server error", http.StatusInternalServerError)
 				return
 			}
@@ -80,6 +80,7 @@ func Register(w http.ResponseWriter, r *http.Request) {
 		r.ParseForm()
 		fmt.Println("nome:", r.Form["fnome"])
 		fmt.Println("sobrenome:", r.Form["flast"])
+		fmt.Println("email:", r.Form["femail"])
 		fmt.Println("password:", r.Form["fpass"])
 	}
 }

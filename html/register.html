@@ -1,90 +1,116 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <link rel="stylesheet" href="static/css/styleregister.css">
-  <title>Deli da Persy - Cadastro de Cliente</title>
-  <script>
-    window.onload = function() {
-      document.getElementById('finish').addEventListener('change', function() {
-        if (this.checked) {
-          document.getElementsByClassName('c-form')[0].submit();
-        }
-      });
-    }
-  </script>
-</head>
-<body>
-    <input class="c-checkbox" type="checkbox" id="start">
-    <input class="c-checkbox" type="checkbox" id="progress2">
-    <input class="c-checkbox" type="checkbox" id="progress3">
-    <input class="c-checkbox" type="checkbox" id="finish">
+  <head>
+    <link rel="stylesheet" href="static/css/styleregister.css" />
+    <title>Deli da Persy - Cadastro de Cliente</title>
+    <script>
+      window.onload = function () {
+        document
+          .getElementById("finish")
+          .addEventListener("change", function () {
+            if (this.checked) {
+              document.getElementsByClassName("c-form")[0].submit();
+            }
+          });
+      };
+    </script>
+  </head>
+  <body>
+    <input class="c-checkbox" type="checkbox" id="start" />
+    <input class="c-checkbox" type="checkbox" id="progress2" />
+    <input class="c-checkbox" type="checkbox" id="progress3" />
+    <input class="c-checkbox" type="checkbox" id="progress4" />
+    <input class="c-checkbox" type="checkbox" id="finish" />
     <div class="c-form__progress"></div>
-    
+
     <div class="c-formContainer">
       <div class="c-welcome">Cadastro feito com sucesso! Seja bem vindo!</div>
       <form class="c-form" action="/register" method="post">
         <div class="c-form__group">
-          <label class="c-form__label" for="username">
-                        <input
-                            type="text"
-                            id="username"
-                            name="fuser"
-                            class="c-form__input"
-                            placeholder=" "
-                            pattern="[^\s]+"
-                            required>
-    
-                        <label class="c-form__next" for="progress2" role="button">
-                            <span class="c-form__nextIcon"></span>
-                        </label>
-    
-          <span class="c-form__groupLabel">Qual o seu nome?</span>
-          <b class="c-form__border"></b>
+          <label class="c-form__label" for="fname">
+            <input
+              type="text"
+              id="fname"
+              name="fname"
+              class="c-form__input"
+              placeholder=" "
+              pattern="[^\s]+"
+              required
+            />
+
+            <label class="c-form__next" for="progress2" role="button">
+              <span class="c-form__nextIcon"></span>
+            </label>
+
+            <span class="c-form__groupLabel">Qual o seu nome?</span>
+            <b class="c-form__border"></b>
           </label>
         </div>
-    
+        <div class="c-form__group">
+          <label class="c-form__label" for="lname">
+            <input
+              type="text"
+              id="lname"
+              name="lname"
+              class="c-form__input"
+              placeholder=" "
+              pattern="[^\s]+"
+              required
+            />
+
+            <label class="c-form__next" for="progress3" role="button">
+              <span class="c-form__nextIcon"></span>
+            </label>
+
+            <span class="c-form__groupLabel">Qual o seu sobrenome?</span>
+            <b class="c-form__border"></b>
+          </label>
+        </div>
+
         <div class="c-form__group">
           <label class="c-form__label" for="femail">
-                        <input
-                            type="email"
-                            id="femail"
-                            name="femail"
-                            class="c-form__input"
-                            placeholder=" "
-                            pattern="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{1,63}$"
-                            required>
-    
-                        <label class="c-form__next" for="progress3" role="button">
-                            <span class="c-form__nextIcon"></span>
-                        </label>
-    
-          <span class="c-form__groupLabel">Qual o seu email?</span>
-          <b class="c-form__border"></b>
+            <input
+              type="email"
+              id="femail"
+              name="femail"
+              class="c-form__input"
+              placeholder=" "
+              pattern="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{1,63}$"
+              required
+            />
+
+            <label class="c-form__next" for="progress4" role="button">
+              <span class="c-form__nextIcon"></span>
+            </label>
+            <span class="c-form__groupLabel">Qual o seu email?</span>
+            <b class="c-form__border"></b>
           </label>
         </div>
-    
+
         <div class="c-form__group">
           <label class="c-form__label" for="fpass">
-                        <input
-                            type="password"
-                            id="fpass"
-                            name="fpass"
-                            class="c-form__input"
-                            placeholder=" "
-                            required>
-    
-                        <label class="c-form__next" for="finish" role="button">
-                            <span class="c-form__nextIcon"></span>
-                        </label>
-    
-          <span class="c-form__groupLabel">Crie a sua senha.</span>
-          <b class="c-form__border"></b>
+            <input
+              type="password"
+              id="fpass"
+              name="fpass"
+              class="c-form__input"
+              placeholder=" "
+              required
+            />
+
+            <label class="c-form__next" for="finish" role="button">
+              <span class="c-form__nextIcon"></span>
+            </label>
+
+            <span class="c-form__groupLabel">Crie a sua senha.</span>
+            <b class="c-form__border"></b>
           </label>
         </div>
-    
-        <label class="c-form__toggle" for="start">Registrar-se<span class="c-form__toggleIcon">
-            </span></label>
+
+        <label class="c-form__toggle" for="start"
+          >Registrar-se<span class="c-form__toggleIcon"></span
+        ></label>
       </form>
     </div>
-</body>
+  </body>
 </html>
