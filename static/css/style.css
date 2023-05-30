@@ -89,7 +89,7 @@ top: -5px;
 .forget label a:hover{
     text-decoration: underline;
 }
-button{
+.butao{
     width: 100%;
     height: 40px;
     border-radius: 40px;
