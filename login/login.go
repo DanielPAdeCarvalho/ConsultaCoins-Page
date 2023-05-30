@@ -16,7 +16,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {
 		t, err := template.ParseFiles("html/index.html")
 		if err != nil {
-			fmt.Println("Error parsing template:", err)
+			fmt.Println("Error parsing template do index.html:", err)
 			http.Error(w, "Internal server error", http.StatusInternalServerError)
 			return
 		}
@@ -53,7 +53,13 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		}
 		resposta := string(body)
 		if strings.Contains(resposta, `"Authorized"`) {
-			fmt.Println("Logado com sucesso!")
+			t, err := template.ParseFiles("html/saldo.html")
+			if err != nil {
+				fmt.Println("Error parsing template de saldo.html:", err)
+				http.Error(w, "Internal server error", http.StatusInternalServerError)
+				return
+			}
+			t.Execute(w, nil)
 		} else {
 			fmt.Println(resposta)
 		}
