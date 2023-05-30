@@ -1,60 +1,30 @@
 package main
 
 import (
+	"consultacoins/login"
 	"fmt"
-	"html/template"
+	"log"
 	"net/http"
-	"strings"
+
+	"github.com/joho/godotenv"
 )
 
-func sayhelloName(w http.ResponseWriter, r *http.Request) {
-	r.ParseForm()
-	for k, v := range r.Form {
-		fmt.Println("key:", k)
-		fmt.Println("val:", strings.Join(v, ""))
-	}
+func sayHello(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Servidor ok!")
 }
 
-func login(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("login method:", r.Method)
-	if r.Method == "GET" {
-		t, err := template.ParseFiles("html/index.html")
-		if err != nil {
-			fmt.Println("Error parsing template:", err)
-			http.Error(w, "Internal server error", http.StatusInternalServerError)
-			return
-		}
-		t.Execute(w, nil)
-	} else {
-		r.ParseForm()
-		fmt.Println("username:", r.Form["username"])
-		fmt.Println("password:", r.Form["password"])
-	}
-}
-
-func register(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("register method:", r.Method)
-	if r.Method == "GET" {
-		t, err := template.ParseFiles("html/register.html")
-		if err != nil {
-			fmt.Println("Error parsing template:", err)
-			http.Error(w, "Internal server error", http.StatusInternalServerError)
-			return
-		}
-		t.Execute(w, nil)
-	} else {
-		r.ParseForm()
-		fmt.Println("username:", r.Form["fuser"])
-		fmt.Println("email:", r.Form["femail"])
-		fmt.Println("password:", r.Form["fpass"])
+func LoadEnv() {
+	err := godotenv.Load("env/.env")
+	if err != nil {
+		log.Fatalf("Error loading .env file: %s", err)
 	}
 }
 
 func main() {
-	http.HandleFunc("/", sayhelloName)
-	http.HandleFunc("/login", login)
-	http.HandleFunc("/register", register)
+	LoadEnv()
+	http.HandleFunc("/", sayHello)
+	http.HandleFunc("/login", login.Login)
+	http.HandleFunc("/register", login.Register)
 
 	// Serve static files
 	fs := http.FileServer(http.Dir("static"))
