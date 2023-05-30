@@ -13,16 +13,14 @@ func sayhelloName(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("key:", k)
 		fmt.Println("val:", strings.Join(v, ""))
 	}
-	fmt.Fprintf(w, "Hello astaxie!")
+	fmt.Fprintf(w, "Servidor ok!")
 }
 
 func login(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("chegou aqui")
-	fmt.Println("method:", r.Method)
+	fmt.Println("login method:", r.Method)
 	if r.Method == "GET" {
-		t, err := template.ParseFiles("index.html")
+		t, err := template.ParseFiles("html/index.html")
 		if err != nil {
-			// Handle the error here. For example, you might log it and return a 500 status to the user.
 			fmt.Println("Error parsing template:", err)
 			http.Error(w, "Internal server error", http.StatusInternalServerError)
 			return
@@ -35,9 +33,28 @@ func login(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func register(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("register method:", r.Method)
+	if r.Method == "GET" {
+		t, err := template.ParseFiles("html/register.html")
+		if err != nil {
+			fmt.Println("Error parsing template:", err)
+			http.Error(w, "Internal server error", http.StatusInternalServerError)
+			return
+		}
+		t.Execute(w, nil)
+	} else {
+		r.ParseForm()
+		fmt.Println("username:", r.Form["fuser"])
+		fmt.Println("email:", r.Form["femail"])
+		fmt.Println("password:", r.Form["fpass"])
+	}
+}
+
 func main() {
 	http.HandleFunc("/", sayhelloName)
 	http.HandleFunc("/login", login)
+	http.HandleFunc("/register", register)
 
 	// Serve static files
 	fs := http.FileServer(http.Dir("static"))
