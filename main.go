@@ -3,25 +3,14 @@ package main
 import (
 	"consultacoins/login"
 	"fmt"
-	"log"
 	"net/http"
-
-	"github.com/joho/godotenv"
 )
 
 func sayHello(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Servidor ok!")
 }
 
-func LoadEnv() {
-	err := godotenv.Load("env/.env")
-	if err != nil {
-		log.Fatalf("Error loading .env file: %s", err)
-	}
-}
-
 func main() {
-	LoadEnv()
 	http.HandleFunc("/", sayHello)
 	http.HandleFunc("/login", login.Login)
 	http.HandleFunc("/register", login.Register)
