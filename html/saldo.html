@@ -1,10 +1,19 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-<head>
-    <link rel="stylesheet" href="static/css/styleSaldo.css">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="static/css/styleSaldo.css" />
     <title>Deli da Persy - Saldo</title>
-</head>
-<body>
-    <h2>Saldo</h2>
-</body>
+  </head>
+  <body>
+    <section>
+      <div class="container">
+        <div class="client-card">
+          <h1 class="client-name">{{.Name}}</h1>
+          <p class="client-saldo">{{.Saldo}}</p>
+        </div>
+      </div>
+    </section>
+  </body>
 </html>

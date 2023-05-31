@@ -2,6 +2,7 @@ package login
 
 import (
 	"bytes"
+	"consultacoins/coins"
 	"consultacoins/env"
 	"encoding/json"
 	"fmt"
@@ -53,13 +54,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		}
 		resposta := string(body)
 		if strings.Contains(resposta, `"Authorized"`) {
-			t, err := template.ParseFiles("html/saldo.html")
-			if err != nil {
-				fmt.Println("Error parsing template de :", err)
-				http.Error(w, "Internal server error", http.StatusInternalServerError)
-				return
-			}
-			t.Execute(w, nil)
+			coins.Saldo(w, r, data["email"])
 		} else {
 			fmt.Println(resposta)
 		}
