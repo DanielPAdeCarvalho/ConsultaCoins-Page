@@ -1,15 +1,12 @@
 package coins
 
 import (
+	"consultacoins/env"
+	"consultacoins/models"
 	"fmt"
 	"html/template"
 	"net/http"
 )
-
-type ClientData struct {
-	Name  string
-	Saldo string
-}
 
 func Saldo(w http.ResponseWriter, r *http.Request, email string) {
 	t, err := template.ParseFiles("html/saldo.html")
@@ -18,10 +15,12 @@ func Saldo(w http.ResponseWriter, r *http.Request, email string) {
 		http.Error(w, "Internal server error", http.StatusInternalServerError)
 		return
 	}
-	clientData := ClientData{
-		Name:  "Algodao Carvalho",
+
+	url := env.API_LOGON + "/"
+
+	clientData := models.Client{
+		Nome:  "Algodao Carvalho",
 		Saldo: "P¢: 278",
 	}
-
 	t.Execute(w, clientData)
 }

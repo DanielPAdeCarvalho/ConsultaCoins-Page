@@ -1,7 +1,6 @@
 package main
 
 import (
-	"consultacoins/coins"
 	"consultacoins/login"
 	"fmt"
 	"net/http"
@@ -15,7 +14,6 @@ func main() {
 	http.HandleFunc("/", sayHello)
 	http.HandleFunc("/login", login.Login)
 	http.HandleFunc("/register", login.Register)
-	http.HandleFunc("/saldo", coins.Saldo)
 
 	// Serve static files
 	fs := http.FileServer(http.Dir("static"))
