@@ -13,6 +13,7 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
+	"time"
 )
 
 func Login(w http.ResponseWriter, r *http.Request) {
@@ -97,19 +98,20 @@ func Register(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			log.Fatalf("Failed to do request cadastro: %s\n", err)
 		}
+		coins.StartWallet(cliente)
+		time.Sleep(2 * time.Second)
 		defer response.Body.Close()
-
 		//fando o login da pessoa na pagina
-		formData := url.Values{
+		loginReq, err := http.NewRequest("POST", "", nil)
+		if err != nil {
+			log.Fatalf("Failed to create login request: %s\n", err)
+		}
+
+		loginReq.PostForm = url.Values{
 			"email":    {cliente.Email},
 			"password": {cliente.Senha},
 		}
 
-		resp, err := http.PostForm("/login", formData)
-		if err != nil {
-			log.Fatalf("Could not send POST request: %s", err.Error())
-		}
-		defer resp.Body.Close()
-
+		Login(w, loginReq)
 	}
 }
