@@ -4,12 +4,14 @@ import (
 	"bytes"
 	"consultacoins/coins"
 	"consultacoins/env"
+	"consultacoins/models"
 	"encoding/json"
 	"fmt"
 	"html/template"
 	"io"
 	"log"
 	"net/http"
+	"net/url"
 	"strings"
 )
 
@@ -73,9 +75,41 @@ func Register(w http.ResponseWriter, r *http.Request) {
 		t.Execute(w, nil)
 	} else {
 		r.ParseForm()
-		fmt.Println("nome:", r.Form["fnome"])
-		fmt.Println("sobrenome:", r.Form["flast"])
-		fmt.Println("email:", r.Form["femail"])
-		fmt.Println("password:", r.Form["fpass"])
+		cliente := models.Client{
+			Nome:      r.Form["fnome"][0],
+			Sobrenome: r.Form["flast"][0],
+			Email:     r.Form["femail"][0],
+			Senha:     r.Form["fpass"][0],
+		}
+		jsonData, err := json.Marshal(cliente)
+		if err != nil {
+			fmt.Println("Failed to marshal JSON cadastro:", err)
+			return
+		}
+		uri := env.API_LOGON + "/signclient"
+		req, err := http.NewRequest("POST", uri, bytes.NewBuffer(jsonData))
+		if err != nil {
+			log.Fatalf("Failed to create cadastro: %s\n", err)
+		}
+		req.Header.Set("Content-Type", "application/json")
+		client := &http.Client{}
+		response, err := client.Do(req)
+		if err != nil {
+			log.Fatalf("Failed to do request cadastro: %s\n", err)
+		}
+		defer response.Body.Close()
+
+		//fando o login da pessoa na pagina
+		formData := url.Values{
+			"email":    {cliente.Email},
+			"password": {cliente.Senha},
+		}
+
+		resp, err := http.PostForm("/login", formData)
+		if err != nil {
+			log.Fatalf("Could not send POST request: %s", err.Error())
+		}
+		defer resp.Body.Close()
+
 	}
 }
