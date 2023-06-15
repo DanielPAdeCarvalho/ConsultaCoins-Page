@@ -76,11 +76,11 @@ func Register(w http.ResponseWriter, r *http.Request) {
 		t.Execute(w, nil)
 	} else {
 		r.ParseForm()
+		nomecliente := r.Form["fnome"][0] + " " + r.Form["flast"][0]
 		cliente := models.Client{
-			Nome:      r.Form["fnome"][0],
-			Sobrenome: r.Form["flast"][0],
-			Email:     r.Form["femail"][0],
-			Senha:     r.Form["fpass"][0],
+			Nome:  nomecliente,
+			Email: r.Form["femail"][0],
+			Senha: r.Form["fpass"][0],
 		}
 		jsonData, err := json.Marshal(cliente)
 		if err != nil {

@@ -8,6 +8,7 @@ import (
 	"html/template"
 	"io"
 	"net/http"
+	"strconv"
 	"strings"
 )
 
@@ -30,19 +31,27 @@ func Saldo(w http.ResponseWriter, r *http.Request, email string) {
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		fmt.Println("Error reading response body:", err)
+		fmt.Println("Error reading response body:", body)
 		http.Error(w, "Internal server error", http.StatusInternalServerError)
 		return
 	}
 	parts := strings.Split(string(body), " ")
 	if len(parts) < 3 {
+		fmt.Println("Error parsing response body parts: ", parts)
 		http.Error(w, "expected at least 3 parts, but got: ", http.StatusInternalServerError)
+		return
+	}
+
+	saldinho, err := strconv.ParseFloat(parts[2][:len(parts[2])-1], 32)
+	if err != nil {
+		fmt.Println("Error parsing saldo to float:", err)
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
 		return
 	}
 
 	clientData := models.Client{
 		Nome:  parts[0][1:] + " " + parts[1],
-		Saldo: 42,
+		Saldo: saldinho,
 	}
 	template.Execute(w, clientData)
 }
