@@ -2,6 +2,7 @@ package main
 
 import (
 	"consultacoins/login"
+	"crypto/tls"
 	"fmt"
 	"net/http"
 )
@@ -21,7 +22,15 @@ func main() {
 
 	// Start server
 	fmt.Println("Servidor iniciado na porta 8080")
-	err := http.ListenAndServe(":8080", nil)
+
+	server := &http.Server{
+		Addr:    ":8080",
+		Handler: nil,
+		TLSConfig: &tls.Config{
+			MinVersion: tls.VersionTLS13,
+		},
+	}
+	err := server.ListenAndServe()
 	if err != nil {
 		fmt.Println("Erro ao iniciar servidor: ", err)
 	}
