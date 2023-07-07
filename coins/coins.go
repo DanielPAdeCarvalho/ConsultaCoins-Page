@@ -3,10 +3,13 @@ package coins
 import (
 	"consultacoins/env"
 	"consultacoins/models"
+	"crypto/tls"
+	"crypto/x509"
 	"encoding/json"
 	"fmt"
 	"html/template"
 	"io"
+	"log"
 	"net/http"
 	"strconv"
 	"strings"
@@ -20,8 +23,22 @@ func Saldo(w http.ResponseWriter, r *http.Request, email string) {
 		return
 	}
 
+	caPool := x509.NewCertPool()
+	caPool.AppendCertsFromPEM([]byte(env.CERTIFICATE))
+	if ok := caPool.AppendCertsFromPEM([]byte(env.CERTIFICATE)); !ok {
+		log.Fatalf("Failed to append certificate")
+	}
+
+	// Setup HTTPS client
+	tlsConfig := &tls.Config{
+		RootCAs:    caPool,
+		MinVersion: tls.VersionTLS13,
+	}
+	transport := &http.Transport{TLSClientConfig: tlsConfig}
+	client := &http.Client{Transport: transport}
+
 	url := env.API_COINS + "/mail/" + email
-	resp, err := http.Get(url)
+	resp, err := client.Get(url)
 	if err != nil {
 		fmt.Println("Error getting saldo:", err)
 		http.Error(w, "Internal server error", http.StatusInternalServerError)
