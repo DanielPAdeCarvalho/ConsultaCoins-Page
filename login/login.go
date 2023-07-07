@@ -47,22 +47,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		}
 		req.Header.Set("Content-Type", "application/json")
 
-		//Certificate
-		caPool := x509.NewCertPool()
-		if ok := caPool.AppendCertsFromPEM([]byte(env.LOGON_CERTIFICATE)); !ok {
-			log.Fatalf("Failed to append certificate")
-		}
-
-		transport := &http.Transport{
-			TLSClientConfig: &tls.Config{
-				RootCAs:    caPool,
-				MinVersion: tls.VersionTLS13,
-			},
-		}
-		client := &http.Client{
-			Transport: transport,
-			Timeout:   time.Second * 10, // Timeout after 10 seconds
-		}
+		client := CertifyLogin()
 		response, err := client.Do(req)
 		if err != nil {
 			log.Fatalf("Failed to do request: %s", err)
@@ -72,7 +57,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		// Read the response body
 		body, err := io.ReadAll(response.Body)
 		if err != nil {
-			log.Fatal("Error reading response body:", err)
+			log.Fatal("env.COINS_CERTIFICATError reading response body:", err)
 		}
 		resposta := string(body)
 		if strings.Contains(resposta, `"Authorized"`) {
@@ -112,7 +97,7 @@ func Register(w http.ResponseWriter, r *http.Request) {
 			log.Fatalf("Failed to create cadastro: %s\n", err)
 		}
 		req.Header.Set("Content-Type", "application/json")
-		client := &http.Client{}
+		client := CertifyLogin()
 		response, err := client.Do(req)
 		if err != nil {
 			log.Fatalf("Failed to do request cadastro: %s\n", err)
@@ -133,4 +118,26 @@ func Register(w http.ResponseWriter, r *http.Request) {
 
 		Login(w, loginReq)
 	}
+}
+
+func CertifyLogin() http.Client {
+
+	//Certificate
+	caPool := x509.NewCertPool()
+	if ok := caPool.AppendCertsFromPEM([]byte(env.LOGON_CERTIFICATE)); !ok {
+		log.Fatalf("Failed to append certificate")
+	}
+
+	transport := &http.Transport{
+		TLSClientConfig: &tls.Config{
+			RootCAs:    caPool,
+			MinVersion: tls.VersionTLS13,
+		},
+	}
+	client := &http.Client{
+		Transport: transport,
+		Timeout:   time.Second * 10, // Timeout after 10 seconds
+	}
+
+	return *client
 }
