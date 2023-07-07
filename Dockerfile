@@ -2,11 +2,15 @@
 # STEP 1 build executable binary
 ############################
 FROM golang:1.20.5-alpine3.18 as builder
+
 WORKDIR /app
+
+# Fetch dependencies.
 COPY go.mod go.sum ./
 RUN go mod download
+
+# Copy the source and build the application.
 COPY . .
-WORKDIR /app
 RUN GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -ldflags="-w -s" -o  main .
 
 ############################
@@ -14,9 +18,12 @@ RUN GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -ldflags="-w -s" -o  main .
 ############################
 FROM scratch
 
+# Create appuser
+USER 1001
+
 COPY --from=builder /app/main /app/main
 COPY --from=builder /app/html /html
 COPY --from=builder /app/static /static
 
 EXPOSE 8080
-CMD ["/app/main"]
+ENTRYPOINT ["/app/main"]
