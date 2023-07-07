@@ -5,6 +5,8 @@ import (
 	"consultacoins/coins"
 	"consultacoins/env"
 	"consultacoins/models"
+	"crypto/tls"
+	"crypto/x509"
 	"encoding/json"
 	"fmt"
 	"html/template"
@@ -44,12 +46,30 @@ func Login(w http.ResponseWriter, r *http.Request) {
 			log.Fatalf("Failed to create request: %s", err)
 		}
 		req.Header.Set("Content-Type", "application/json")
-		client := &http.Client{}
+
+		//Certificate
+		caPool := x509.NewCertPool()
+		caPool.AppendCertsFromPEM([]byte(env.CERTIFICATE))
+		if ok := caPool.AppendCertsFromPEM([]byte(env.CERTIFICATE)); !ok {
+			log.Fatalf("Failed to append certificate")
+		}
+
+		transport := &http.Transport{
+			TLSClientConfig: &tls.Config{
+				RootCAs:    caPool,
+				MinVersion: tls.VersionTLS13,
+			},
+		}
+		client := &http.Client{
+			Transport: transport,
+			Timeout:   time.Second * 10, // Timeout after 10 seconds
+		}
 		response, err := client.Do(req)
 		if err != nil {
 			log.Fatalf("Failed to do request: %s", err)
 		}
 		defer response.Body.Close()
+
 		// Read the response body
 		body, err := io.ReadAll(response.Body)
 		if err != nil {
