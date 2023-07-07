@@ -13,6 +13,7 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
+	"time"
 )
 
 func Saldo(w http.ResponseWriter, r *http.Request, email string) {
@@ -23,20 +24,21 @@ func Saldo(w http.ResponseWriter, r *http.Request, email string) {
 		return
 	}
 
+	//Certificate
 	caPool := x509.NewCertPool()
-	caPool.AppendCertsFromPEM([]byte(env.CERTIFICATE))
-	if ok := caPool.AppendCertsFromPEM([]byte(env.CERTIFICATE)); !ok {
+	if ok := caPool.AppendCertsFromPEM([]byte(env.COINS_CERTIFICATE)); !ok {
 		log.Fatalf("Failed to append certificate")
 	}
-
-	// Setup HTTPS client
-	tlsConfig := &tls.Config{
-		RootCAs:    caPool,
-		MinVersion: tls.VersionTLS13,
+	transport := &http.Transport{
+		TLSClientConfig: &tls.Config{
+			RootCAs:    caPool,
+			MinVersion: tls.VersionTLS13,
+		},
 	}
-	transport := &http.Transport{TLSClientConfig: tlsConfig}
-	client := &http.Client{Transport: transport}
-
+	client := &http.Client{
+		Transport: transport,
+		Timeout:   time.Second * 10, // Timeout after 10 seconds
+	}
 	url := env.API_COINS + "/mail/" + email
 	resp, err := client.Get(url)
 	if err != nil {

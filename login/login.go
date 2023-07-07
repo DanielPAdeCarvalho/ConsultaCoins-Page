@@ -49,8 +49,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 
 		//Certificate
 		caPool := x509.NewCertPool()
-		caPool.AppendCertsFromPEM([]byte(env.CERTIFICATE))
-		if ok := caPool.AppendCertsFromPEM([]byte(env.CERTIFICATE)); !ok {
+		if ok := caPool.AppendCertsFromPEM([]byte(env.LOGON_CERTIFICATE)); !ok {
 			log.Fatalf("Failed to append certificate")
 		}
 
