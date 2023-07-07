@@ -97,8 +97,8 @@ func Register(w http.ResponseWriter, r *http.Request) {
 			log.Fatalf("Failed to create cadastro: %s\n", err)
 		}
 		req.Header.Set("Content-Type", "application/json")
-		client := CertifyLogin()
-		response, err := client.Do(req)
+		HttpClient := CertifyLogin()
+		response, err := HttpClient.Do(req)
 		if err != nil {
 			log.Fatalf("Failed to do request cadastro: %s\n", err)
 		}
