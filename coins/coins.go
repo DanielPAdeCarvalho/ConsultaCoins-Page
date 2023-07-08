@@ -10,6 +10,7 @@ import (
 	"html/template"
 	"io"
 	"log"
+	"math"
 	"net/http"
 	"strconv"
 	"strings"
@@ -48,6 +49,7 @@ func Saldo(w http.ResponseWriter, r *http.Request, email string) {
 	}
 
 	saldinho, err := strconv.ParseFloat(parts[2][:len(parts[2])-1], 32)
+	saldinho = math.Trunc(saldinho*100) / 100
 	if err != nil {
 		fmt.Println("Error parsing saldo to float:", err)
 		http.Error(w, "Internal server error", http.StatusInternalServerError)
